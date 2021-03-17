@@ -1,7 +1,7 @@
 var os = require('os');
 var child;
 var fails = 0;
-var goBinary = "./template"; //or template.exe
+var goBinary = "xx-coin-game-ui"; //or template.exe
 
 function setPage(html) {
     const container = document.getElementById("app");
