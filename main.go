@@ -2,16 +2,32 @@ package main
 
 import (
 	"github.com/dtylman/gowd"
+	"gitlab.com/elixxir/client/interfaces/contact"
+	"gitlab.com/elixxir/client/single"
+	"io/ioutil"
+	"os"
 
 	"fmt"
 	"time"
 
 	"github.com/dtylman/gowd/bootstrap"
+	"gitlab.com/elixxir/client/api"
+	"gitlab.com/elixxir/client/interfaces/params"
+	jww "github.com/spf13/jwalterweatherman"
 )
+
+var password string
+var session string
+var ndfPath string
+var singleMngr *single.Manager
+var botContact contact.Contact
 
 var body *gowd.Element
 
 func main() {
+
+	_, singleMngr = initClient()
+
 	//creates a new bootstrap fluid container
 	body = bootstrap.NewContainer(false)
 
@@ -59,6 +75,20 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
 
 	// makes the body stop responding to user events
 	body.Disable()
+
+	ethAddr := body.Find("ethaddr").GetValue()
+	sendText := body.Find("message").GetValue()
+
+	//send the message
+	message := fmt.Sprintf("%s:%s",ethAddr,sendText)
+
+	replyFunc := func(payload []byte, err error){
+
+	}
+
+	err := singleMngr.TransmitSingleUse(botContact, []byte(message),
+		"xxCoinGame", 10, replyFunc, 30*time.Second)
+
 
 	// clean up - remove the added elements
 	defer func() {
