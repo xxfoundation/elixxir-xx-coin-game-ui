@@ -2,13 +2,10 @@ package main
 
 import (
 	"github.com/dtylman/gowd"
+	"github.com/dtylman/gowd/bootstrap"
 	"gitlab.com/elixxir/client/interfaces/contact"
 	"gitlab.com/elixxir/client/single"
-
-	"fmt"
 	"time"
-
-	"github.com/dtylman/gowd/bootstrap"
 )
 
 var password string
@@ -21,9 +18,9 @@ var body *gowd.Element
 
 func main() {
 
-	_, singleMngr = initClient()
+	//_, singleMngr = initClient()
 
-	//creates a new bootstrap fluid container
+	// creates a new bootstrap fluid container
 	body = bootstrap.NewContainer(false)
 
 	// add some elements using the object model
@@ -31,55 +28,61 @@ func main() {
 	row := bootstrap.NewRow(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, div))
 	body.AddElement(row)
 
-	div.AddHTML(`
-	<label for="fname">Ethereum address:</label><br>
-	<input type="text" id="ethaddr" name="ethaddr"><br>
-	<label for="lname">Message:</label><br>
-	<input type="text" id="message" name="message"><br><br>`, nil)
+	row.SetAttribute("style", "font-size:1.5em")
+
+	ethAddr := bootstrap.NewFormInput(bootstrap.InputTypeText, "Ethereum Address:")
+	ethAddr.Element.Kids[1].SetAttribute("style", "font-family:'Roboto Mono', 'Courier New', Courier, monospace;")
+	sendText := bootstrap.NewFormInput(bootstrap.InputTypeText, "Message:")
+
+	div.AddElement(ethAddr.Element)
+	div.AddElement(sendText.Element)
 
 	// add a button
 	btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send")
-	btn.OnEvent(gowd.OnClick, btnClicked)
-	row.AddElement(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, bootstrap.NewElement("div", "well", btn)))
+	btnEvent := func(sender *gowd.Element, event *gowd.EventElement) {
+		btnClicked(sender, event, ethAddr.Element, sendText.Element)
+	}
+	btn.OnEvent(gowd.OnClick, btnEvent)
+	div.AddElement(btn)
 
-	/*
-	// add some other elements from HTML
-	div.AddHTML(`<div class="dropdown">
-	<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-	<span class="caret"></span></button>
-	<ul class="dropdown-menu" id="dropdown-menu">
-	<li><a href="#">HTML</a></li>
-	<li><a href="#">CSS</a></li>
-	<li><a href="#">JavaScript</a></li>
-	</ul>
-	</div>`, nil)
-	
-	*/
+	// div.AddHTML(`
+	// <label for="fname">Ethereum address:</label><br>
+	// <input type="text" id="ethaddr" name="ethaddr"><br>
+	// <label for="lname">Message:</label><br>
+	// <input type="text" id="message" name="message"><br><br>`, nil)
+	//
+	// // add a button
+	// btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send")
+	// btn.OnEvent(gowd.OnClick, btnClicked)
+	// row.AddElement(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, bootstrap.NewElement("div", "well", btn)))
 
-	//start the ui loop
+	// start the ui loop
 	gowd.Run(body)
 }
 
 // happens when the 'start' button is clicked
-func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
+func btnClicked(sender *gowd.Element, event *gowd.EventElement, ethAddr, sendText *gowd.Element) {
+	div := bootstrap.NewElement("div", "well")
+	row := bootstrap.NewRow(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, div))
+	body.AddElement(row)
+
 	// adds test to the body
-	text := body.AddElement(gowd.NewStyledText("Sending message...", gowd.BoldText))
+	text := div.AddElement(gowd.NewStyledText("Sending message...", gowd.BoldText))
 
 	// makes the body stop responding to user events
 	body.Disable()
 
-	ethAddr := body.Find("ethaddr").GetValue()
-	sendText := body.Find("message").GetValue()
+	// Send the message
+	message := ethAddr.GetValue() + ";" + sendText.GetValue()
 
-	//send the message
-	message := fmt.Sprintf("%s:%s",ethAddr,sendText)
+	text.SetText(message)
 
 	// Inline function to print message from client to page, callback for upcoming function
-	replyFunc := func(payload []byte, err error){
+	replyFunc := func(payload []byte, err error) {
 		if err != nil {
-			body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", err.Error()), nil)
+			text.SetText(err.Error())
 		} else {
-			body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", string(payload)), nil)
+			text.SetText(string(payload))
 		}
 		sender.SetText("Start")
 		body.RemoveElement(text)
@@ -88,8 +91,8 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
 
 	err := singleMngr.TransmitSingleUse(botContact, []byte(message),
 		"xxCoinGame", 10, replyFunc, 30*time.Second)
-	if err!=nil{
-		body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", string(err.Error())), nil)
+	if err != nil {
+		text.SetText(err.Error())
 		sender.SetText("Start")
 		body.RemoveElement(text)
 		body.Enable()
