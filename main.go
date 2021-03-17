@@ -4,16 +4,11 @@ import (
 	"github.com/dtylman/gowd"
 	"gitlab.com/elixxir/client/interfaces/contact"
 	"gitlab.com/elixxir/client/single"
-	"io/ioutil"
-	"os"
 
 	"fmt"
 	"time"
 
 	"github.com/dtylman/gowd/bootstrap"
-	"gitlab.com/elixxir/client/api"
-	"gitlab.com/elixxir/client/interfaces/params"
-	jww "github.com/spf13/jwalterweatherman"
 )
 
 var password string
@@ -67,11 +62,8 @@ func main() {
 
 // happens when the 'start' button is clicked
 func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
-	// adds a text and progress bar to the body
-	sender.SetText("Working...")
-	text := body.AddElement(gowd.NewStyledText("Working...", gowd.BoldText))
-	progressBar := bootstrap.NewProgressBar()
-	body.AddElement(progressBar.Element)
+	// adds test to the body
+	text := body.AddElement(gowd.NewStyledText("Sending message...", gowd.BoldText))
 
 	// makes the body stop responding to user events
 	body.Disable()
@@ -82,31 +74,23 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
 	//send the message
 	message := fmt.Sprintf("%s:%s",ethAddr,sendText)
 
+	// Inline function to print message from client to page, callback for upcoming function
 	replyFunc := func(payload []byte, err error){
-
+		if err != nil {
+			body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", err.Error()), nil)
+		} else {
+			body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", string(payload)), nil)
+		}
 	}
 
 	err := singleMngr.TransmitSingleUse(botContact, []byte(message),
 		"xxCoinGame", 10, replyFunc, 30*time.Second)
 
-
 	// clean up - remove the added elements
 	defer func() {
 		sender.SetText("Start")
 		body.RemoveElement(text)
-		body.RemoveElement(progressBar.Element)
 		body.Enable()
 	}()
-
-	// render the progress bar
-	for i := 0; i <= 123; i++ {
-		progressBar.SetValue(i, 123)
-		text.SetText(fmt.Sprintf("Working %v", i))
-		time.Sleep(time.Millisecond * 20)
-		// this will cause the body to be refreshed
-		body.Render()
-	}
-
-	body.AddHTML(`<textarea readonly style="width:100%;">Client output would go here</textarea>`, nil)
 
 }
