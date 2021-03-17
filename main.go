@@ -81,16 +81,17 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement) {
 		} else {
 			body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", string(payload)), nil)
 		}
+		sender.SetText("Start")
+		body.RemoveElement(text)
+		body.Enable()
 	}
 
 	err := singleMngr.TransmitSingleUse(botContact, []byte(message),
 		"xxCoinGame", 10, replyFunc, 30*time.Second)
-
-	// clean up - remove the added elements
-	defer func() {
+	if err!=nil{
+		body.AddHTML(fmt.Sprintf("<textarea readonly style\"width:100%;\">{}</textarea>", string(err.Error())), nil)
 		sender.SetText("Start")
 		body.RemoveElement(text)
 		body.Enable()
-	}()
-
+	}
 }
