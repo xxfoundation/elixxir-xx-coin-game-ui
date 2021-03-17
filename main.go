@@ -42,12 +42,17 @@ func main() {
 	div.AddElement(sendText.Element)
 
 	// add a button
-	btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send")
+	btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send over xx")
+	rtnDiv := bootstrap.NewElement("div", "well")
+	rtnRow := bootstrap.NewRow(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, rtnDiv))
+	body.AddElement(rtnRow)
 	btnEvent := func(sender *gowd.Element, event *gowd.EventElement) {
-		btnClicked(sender, event, ethAddr.Element, sendText.Element)
+		btnClicked(sender, event, ethAddr.Element.Kids[1], sendText.Element.Kids[1], rtnDiv)
 	}
 	btn.OnEvent(gowd.OnClick, btnEvent)
 	div.AddElement(btn)
+
+
 
 	// div.AddHTML(`
 	// <label for="fname">Ethereum address:</label><br>
@@ -64,14 +69,20 @@ func main() {
 	gowd.Run(body)
 }
 
+var lastElement *gowd.Element
+
 // happens when the 'start' button is clicked
-func btnClicked(sender *gowd.Element, event *gowd.EventElement, ethAddr, sendText *gowd.Element) {
-	div := bootstrap.NewElement("div", "well")
-	row := bootstrap.NewRow(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, div))
-	body.AddElement(row)
+func btnClicked(sender *gowd.Element, event *gowd.EventElement, ethAddr,
+	sendText *gowd.Element, div *gowd.Element) {
+
+	sender.SetAttribute("disabled", "true")
+	body.Render()
+
+	if lastElement!=nil{
+		div.RemoveElement(lastElement)
+	}
 
 	// adds test to the body
-	text := div.AddElement(gowd.NewStyledText("Sending message...", gowd.BoldText))
 
 	// makes the body stop responding to user events
 	body.Disable()
@@ -79,26 +90,43 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement, ethAddr, sendTex
 	// Send the message
 	message := ethAddr.GetValue() + ";" + sendText.GetValue()
 
-	text.SetText(message)
+	defer func() {
+		sender.RemoveAttribute("disabled")
+		body.Render()
+		body.Enable()
+	}()
 
+	//text.SetText(message)
+	replyString := make(chan string)
 	// Inline function to print message from client to page, callback for upcoming function
 	replyFunc := func(payload []byte, err error) {
+		var result string
 		if err != nil {
-			text.SetText(err.Error())
+			result = err.Error()
 		} else {
-			text.SetText(string(payload))
+			result = string(payload)
 		}
-		sender.SetText("Start")
-		body.RemoveElement(text)
-		body.Enable()
+		replyString <- result
+		//sender.SetText("Start")
+		//body.RemoveElement(text)
+		//body.Enable()
 	}
 
 	err := singleMngr.TransmitSingleUse(botContact, []byte(message),
 		"xxCoinGame", 10, replyFunc, 30*time.Second)
 	if err != nil {
-		text.SetText(err.Error())
-		sender.SetText("Start")
-		body.RemoveElement(text)
-		body.Enable()
+		//body.Enable()
+		lastElement = div.AddElement(gowd.NewStyledText(err.Error(), gowd.BoldText))
+		//sender.SetText("Start")
+		//body.RemoveElement(text)
+		//body.Enable()
+		return
 	}
+
+	result := <- replyString
+
+
+	lastElement = div.AddElement(gowd.NewStyledText(result, gowd.BoldText))
+
+
 }
