@@ -8,17 +8,21 @@ import (
 	"time"
 )
 
-var password string
-var session string
-var ndfPath string
-var singleMngr *single.Manager
+var password = "password"
+var session = ".session"
+var ndfPath = "ndf.json"
+var botContactPath = "botContact.bin"
 var botContact contact.Contact
+
+var singleMngr *single.Manager
 
 var body *gowd.Element
 
 func main() {
 
-	//_, singleMngr = initClient()
+	botContact = readBotContact()
+
+	_, singleMngr = initClient()
 
 	// creates a new bootstrap fluid container
 	body = bootstrap.NewContainer(false)

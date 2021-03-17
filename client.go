@@ -2,7 +2,9 @@ package main
 
 import (
 	"gitlab.com/elixxir/client/api"
+	"gitlab.com/elixxir/client/interfaces/contact"
 	"gitlab.com/elixxir/client/interfaces/params"
+	"gitlab.com/xx_network/primitives/utils"
 	"io/ioutil"
 	"gitlab.com/elixxir/client/single"
 	"os"
@@ -100,4 +102,22 @@ func waitUntilConnected(connected chan bool) {
 			}
 		}
 	}()
+}
+
+func readBotContact() contact.Contact {
+
+	// Read from file
+	data, err := utils.ReadFile(botContactPath)
+	jww.INFO.Printf("Contact file size read in: %d bytes", len(data))
+	if err != nil {
+		jww.FATAL.Panicf("Failed to read contact file: %+v", err)
+	}
+
+	// Unmarshal contact
+	c, err := contact.Unmarshal(data)
+	if err != nil {
+		jww.FATAL.Panicf("Failed to unmarshal contact: %+v", err)
+	}
+
+	return c
 }
