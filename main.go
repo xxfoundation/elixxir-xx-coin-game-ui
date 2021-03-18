@@ -11,6 +11,7 @@ import (
 var password = "password"
 var session = ".session"
 var ndfPath = "ndf.json"
+var logPath = "client.log"
 var botContactPath = "botContact.bin"
 var botContact contact.Contact
 
@@ -19,6 +20,8 @@ var singleMngr *single.Manager
 var body *gowd.Element
 
 func main() {
+
+	initLog()
 
 	botContact = readBotContact()
 
@@ -43,6 +46,7 @@ func main() {
 
 	// add a button
 	btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send over xx")
+	btn.SetAttribute("style","background:#037281;background-color:#037281")
 	rtnDiv := bootstrap.NewElement("div", "well")
 	rtnRow := bootstrap.NewRow(bootstrap.NewColumn(bootstrap.ColumnSmall, 3, rtnDiv))
 	body.AddElement(rtnRow)
@@ -76,6 +80,9 @@ func btnClicked(sender *gowd.Element, event *gowd.EventElement, ethAddr,
 	sendText *gowd.Element, div *gowd.Element) {
 
 	sender.SetAttribute("disabled", "true")
+	sender.Parent.AddHTML(`<div class="spinner-border" role="status">
+	<span class="sr-only">Loading...</span>
+	</div>`, nil)
 	body.Render()
 
 	if lastElement!=nil{

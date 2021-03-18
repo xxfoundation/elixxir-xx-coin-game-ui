@@ -121,3 +121,15 @@ func readBotContact() contact.Contact {
 
 	return c
 }
+
+func initLog(){
+	jww.SetStdoutOutput(ioutil.Discard)
+	logOutput, err := os.OpenFile(logPath,
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		panic(err.Error())
+	}
+	jww.SetLogOutput(logOutput)
+	jww.SetStdoutThreshold(jww.LevelDebug)
+	jww.SetLogThreshold(jww.LevelDebug)
+}
