@@ -18,7 +18,7 @@ update_release:
 	GOFLAGS="" go get gitlab.com/elixxir/client@release
 
 update_master:
-	GOFLAGS="" go get gitlab.com/elixxir/client@release
+	GOFLAGS="" go get gitlab.com/elixxir/client@master
 
 master: clean update_master build
 
