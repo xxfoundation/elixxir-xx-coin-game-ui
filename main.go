@@ -23,7 +23,7 @@ var client ClientAPI
 
 var body *gowd.Element
 
-var testMode = true
+var testMode = false
 
 func main() {
 
