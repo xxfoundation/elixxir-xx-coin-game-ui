@@ -1,18 +1,81 @@
 package main
 
 import (
+	jww "github.com/spf13/jwalterweatherman"
 	"gitlab.com/elixxir/client/api"
+	"gitlab.com/elixxir/client/interfaces"
 	"gitlab.com/elixxir/client/interfaces/contact"
 	"gitlab.com/elixxir/client/interfaces/params"
+	"gitlab.com/elixxir/client/single"
+	"gitlab.com/elixxir/client/stoppable"
 	"gitlab.com/xx_network/primitives/utils"
 	"io/ioutil"
-	"gitlab.com/elixxir/client/single"
 	"os"
-	jww "github.com/spf13/jwalterweatherman"
 	"time"
 )
 
-func initClient() (*api.Client, *single.Manager) {
+type ClientAPI interface {
+	StartNetworkFollower() (<-chan interfaces.ClientError, error)
+	GetHealth() interfaces.HealthTracker
+	AddService(sp api.ServiceProcess)
+	GetNodeRegistrationStatus() (int, int, error)
+}
+
+type SingleManager interface {
+	StartProcesses() stoppable.Stoppable
+	TransmitSingleUse(contact.Contact, []byte, string, uint8, single.ReplyComm,
+		time.Duration) error
+}
+
+type TestClient struct {
+}
+
+func (tc TestClient) StartNetworkFollower() (<-chan interfaces.ClientError, error) {
+	return nil, nil
+}
+
+func (tc TestClient) GetHealth() interfaces.HealthTracker {
+	return nil
+}
+
+func (tc TestClient) AddService(api.ServiceProcess) {
+
+}
+
+var NodeRegistrationStatusTrack = 0
+
+func (tc TestClient) GetNodeRegistrationStatus() (int, int, error) {
+	NodeRegistrationStatusTrack++
+	return NodeRegistrationStatusTrack, 30, nil
+}
+
+type TestSingle struct {
+}
+
+func (ts TestSingle) StartProcesses() stoppable.Stoppable {
+	return nil
+}
+
+func (ts TestSingle) TransmitSingleUse(_ contact.Contact, payload []byte,
+	_ string, _ uint8, callback single.ReplyComm, _ time.Duration) error {
+
+	go func() {
+		time.Sleep(5 * time.Second)
+		// callback(payload, errors.New("ERROR"))
+		callback(payload, nil)
+	}()
+
+	// return errors.New("ERROR")
+	return nil
+}
+
+func initClient(test bool) (ClientAPI, SingleManager) {
+
+	if test {
+		time.Sleep(1 * time.Second)
+		return TestClient{}, TestSingle{}
+	}
+
 	createClient()
 
 	pass := password
@@ -41,12 +104,11 @@ func initClient() (*api.Client, *single.Manager) {
 	return client, singleMng
 }
 
-
 func createClient() *api.Client {
 	pass := password
 	storeDir := session
 
-	//create a new client if none exist
+	// Create a new client if none exist
 	if _, err := os.Stat(storeDir); os.IsNotExist(err) {
 		// Load NDF
 		ndfJSON, err := ioutil.ReadFile(ndfPath)
@@ -69,11 +131,10 @@ func createClient() *api.Client {
 	return client
 }
 
-
 func waitUntilConnected(connected chan bool) {
 	timeoutTimer := time.NewTimer(90 * time.Second)
 	isConnected := false
-	//Wait until we connect or panic if we can't by a timeout
+	// Wait until we connect or panic if we can't by a timeout
 	for !isConnected {
 		select {
 		case isConnected = <-connected:
@@ -122,7 +183,7 @@ func readBotContact() contact.Contact {
 	return c
 }
 
-func initLog(){
+func initLog() {
 	jww.SetStdoutOutput(ioutil.Discard)
 	logOutput, err := os.OpenFile(logPath,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
