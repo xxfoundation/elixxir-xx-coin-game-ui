@@ -1,5 +1,5 @@
 {
-	"name": "xx Coin Game",
+	"name": "xx-coin-game",
 	"main": "index.html",
 	"single-instance": true,
 	"window": {
