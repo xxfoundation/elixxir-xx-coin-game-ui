@@ -128,6 +128,7 @@ func printForm(div *gowd.Element) {
 	// add a button
 	btn := bootstrap.NewButton(bootstrap.ButtonPrimary, "Send over xx")
 	btn.SetAttribute("style", "background:#037281;background-color:#037281")
+	btn.SetAttribute("tabindex", "0")
 	rtnDiv := bootstrap.NewElement("div", "well")
 	body.AddElement(rtnDiv)
 	btnEvent := func(sender *gowd.Element, event *gowd.EventElement) {
