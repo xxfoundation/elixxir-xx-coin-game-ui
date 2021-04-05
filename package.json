@@ -1,15 +1,15 @@
 {
-  "name": "Sample App",
-  "main": "index.html",
-  "single-instance": true,
-  "window": {
-    "position": "center",
-    "width": 600,
-    "height": 400,
-    "frame" : true
-  },
-  "webkit": {
-    "plugin": true
-  },
-  "version": "0.1.0"
+	"name": "xx Coin Game",
+	"main": "index.html",
+	"single-instance": true,
+	"window": {
+		"position": "center",
+		"width": 650,
+		"height": 433,
+		"frame": true
+	},
+	"webkit": {
+		"plugin": true
+	},
+	"version": "1.0.0"
 }

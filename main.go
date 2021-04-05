@@ -14,7 +14,7 @@ import (
 var password = "password"
 var session = ".session"
 var ndfPath = "ndf.json"
-var logPath = "client.log"
+var logPath = "xx-coin-game.log"
 var botContactPath = "botContact.bin"
 var botContact contact.Contact
 
@@ -23,7 +23,7 @@ var client ClientAPI
 
 var body *gowd.Element
 
-var testMode = false
+const testMode = false
 
 func main() {
 
@@ -114,8 +114,9 @@ func printForm(div *gowd.Element) {
 	ethAddr.Element.Kids[1].SetAttribute("style", "font-family:'Roboto Mono', Consolas, 'Courier New', Courier, monospace;")
 	sendText := bootstrap.NewFormInput(bootstrap.InputTypeText, "Message:")
 
-	// FIXME: remove this
-	// ethAddr.SetValue("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7")
+	if testMode {
+		ethAddr.SetValue("0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7")
+	}
 
 	div.AddElement(ethAddr.Element)
 	div.AddElement(sendText.Element)
