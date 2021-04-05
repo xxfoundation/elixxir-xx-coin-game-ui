@@ -6,7 +6,8 @@
 		"position": "center",
 		"width": 650,
 		"height": 433,
-		"frame": true
+		"frame": true,
+		"icon": "img/favicon-32x32.png"
 	},
 	"webkit": {
 		"plugin": true
