@@ -73,10 +73,14 @@ func main() {
 	progressBar.Kids[0].SetAttribute("style", "background:#037281;")
 	div.AddElement(progressBar.Element)
 
+	registeredNodes, totalNodes, err := client.GetNodeRegistrationStatus()
+	if err != nil {
+		jww.FATAL.Panicf("Failed to get node registration status: %+v", err)
+	}
 	go func() {
 		for {
 			time.Sleep(100 * time.Millisecond)
-			registeredNodes, totalNodes, err := client.GetNodeRegistrationStatus()
+			registeredNodes, _, err = client.GetNodeRegistrationStatus()
 			if err != nil {
 				jww.FATAL.Panicf("Failed to get node registration status: %+v", err)
 			}
