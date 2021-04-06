@@ -8,7 +8,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/zeebo/assert v1.3.0 // indirect
-	gitlab.com/elixxir/client v1.5.1-0.20210405225329-2b795b4e6296
+	gitlab.com/elixxir/client v1.5.1-0.20210406013452-137c0c4e919c
 	gitlab.com/xx_network/primitives v0.0.4-0.20210402222416-37c1c4d3fac4
 	golang.org/x/net v0.0.0-20210323141857-08027d57d8cf // indirect
 	google.golang.org/genproto v0.0.0-20210323160006-e668133fea6a // indirect

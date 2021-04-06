@@ -267,6 +267,8 @@ gitlab.com/elixxir/client v1.5.1-0.20210403002517-e06ea70012bb h1:H8+ogSkbEEnEO0
 gitlab.com/elixxir/client v1.5.1-0.20210403002517-e06ea70012bb/go.mod h1:WvyfutgIudzdFpdvPAN08AAM0UhCY3kU/yla/dE9rPM=
 gitlab.com/elixxir/client v1.5.1-0.20210405225329-2b795b4e6296 h1:5fCihLXxf8brdGCTnDSNvYwEE/c120BfF6X0DErmuOg=
 gitlab.com/elixxir/client v1.5.1-0.20210405225329-2b795b4e6296/go.mod h1:W/ro2tpaPl/2X0ioCV5q0zTsvbwO9/gO93pHxOz8E0I=
+gitlab.com/elixxir/client v1.5.1-0.20210406013452-137c0c4e919c h1:TQ1PTpy4oFQFKL38jV57zHHP9V0g72B6ksAtcGxI5DY=
+gitlab.com/elixxir/client v1.5.1-0.20210406013452-137c0c4e919c/go.mod h1:UusUAS7+J35VPZvatgxXJAYcZGfhQg9LCBFrFMqThhU=
 gitlab.com/elixxir/comms v0.0.4-0.20210323165848-495b7efbf1af h1:DyKv7x/N86GNOXoiQ1L2L00J4/n7JaoRlmCYBoyb7O4=
 gitlab.com/elixxir/comms v0.0.4-0.20210323165848-495b7efbf1af/go.mod h1:wuQNnysBXllhSV8ddynQorZEpcHzpMJJ9sPZGsKAxn4=
 gitlab.com/elixxir/comms v0.0.4-0.20210402222700-7fac5f85c596 h1:jX6H4vu//StDLKZn5lcmxp9S3IhzS/8Uttg0K5r7Iqo=
@@ -295,6 +297,8 @@ gitlab.com/elixxir/primitives v0.0.3-0.20210401175645-9b7b92f74ec4 h1:PFrOIpax1I
 gitlab.com/elixxir/primitives v0.0.3-0.20210401175645-9b7b92f74ec4/go.mod h1:9qqDucNbLP9ArL1VKCXQuqYrcAbJIUcI8uzbP7NmKDw=
 gitlab.com/elixxir/primitives v0.0.3-0.20210405224302-03092a268566 h1:Wu7AXDWlqLu9yFzZ/ovHUaWIUOPi1v26b2QHmNC1bfY=
 gitlab.com/elixxir/primitives v0.0.3-0.20210405224302-03092a268566/go.mod h1:MkG5S32UvI6/ZcTLQxFpvEAnCshR6MNG8d8gUrvKC7g=
+gitlab.com/elixxir/primitives v0.0.3-0.20210406002149-ae7bd4896baf h1:1SPT7Z/9IwDQ+CkdpLPP9QyIX7KFtvgVw7/gxLbWzak=
+gitlab.com/elixxir/primitives v0.0.3-0.20210406002149-ae7bd4896baf/go.mod h1:MkG5S32UvI6/ZcTLQxFpvEAnCshR6MNG8d8gUrvKC7g=
 gitlab.com/xx_network/comms v0.0.0-20200805174823-841427dd5023/go.mod h1:owEcxTRl7gsoM8c3RQ5KAm5GstxrJp5tn+6JfQ4z5Hw=
 gitlab.com/xx_network/comms v0.0.4-0.20210323140408-2b2613abb5a3 h1:Mh+YiOX89vG93nRodpPJQkLSipEFXmMyoDgWm77u4TA=
 gitlab.com/xx_network/comms v0.0.4-0.20210323140408-2b2613abb5a3/go.mod h1:0Hx+zO3Pr4uYw4RZXFnPM3ocjY6bPIKDiHCjWTZLOSI=
