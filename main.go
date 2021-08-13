@@ -4,7 +4,7 @@ import (
 	"github.com/dtylman/gowd"
 	"github.com/dtylman/gowd/bootstrap"
 	jww "github.com/spf13/jwalterweatherman"
-	"gitlab.com/elixxir/client/interfaces/contact"
+	"git.xx.network/elixxir/client/interfaces/contact"
 	"regexp"
 	"strconv"
 	"strings"
